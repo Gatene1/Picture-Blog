@@ -1,0 +1,2052 @@
+<?php session_start(); ?>
+
+<html>
+
+	<head>
+    <meta name="description" content="a picture blog">
+    <meta name="author"      content="Gatene">
+    <meta name="keywords"    content="keywords">
+    <meta name="reply-to"    content="gatene@agamedesigner.info">
+                                   
+	<meta charset="UTF-8" />
+    
+    <link rel="icon" href="favicon.ico">
+        <title>A Picture Blog</title>
+    <link href="style2.css" rel="stylesheet" type="text/css">
+    
+    <script src='https://www.google.com/recaptcha/api.js'></script> <!--ReCaptcha No Captcha bit//-->
+	</head>
+    
+<body>
+    	<!--Saved 
+            Space
+            For
+            SESSION
+            Variable
+            Manipulation //-->
+		
+        <script type="text/javascript">
+			var screenWidth = window.screen.width;
+			if (screenWidth < 800) {
+				window.location.replace("http://m.agamedesigner.info");
+			}
+			function menuButtonClick() {
+				var button = document.getElementById("menuButton");
+				var menu = document.getElementById("menuBalloon");
+				var loginRegister = document.getElementById("loginRegister");
+				var xForm = document.getElementById("xForm");
+				if (button.src == "http://agamedesigner.info"){
+					button.src = "menu2.png";
+					menu.style.left = "25px";
+					loginRegister.style.visibility = "hidden";
+					xForm.style.visibility = "hidden";
+				} else {
+					button.src = "menu.png";
+					menu.style.left = "-500px";
+				}
+			}
+			function showRL() {
+				var screenWidth = window.screen.width;
+				var screenHeight = window.screen.height;
+				var button = document.getElementById("menuButton");
+				var menu = document.getElementById("menuBalloon");
+				var loginRegister = document.getElementById("loginRegister");
+				var xForm = document.getElementById("xForm");
+				button.src = "menu.png";
+				menu.style.left = -500;
+				loginRegister.style.visibility = "visible";
+				loginRegister.style.left = (screenWidth - 700) / 2;
+				loginRegister.style.top = (screenHeight - 325) / 2;
+				xForm.style.visibility = "visible";
+				xForm.style.top = (screenHeight - 325) / 2 - 12;
+				xForm.style.left = (screenWidth - 700) / 2 + 693;
+			}
+			function xFormClose() {
+				var loginRegister = document.getElementById("loginRegister");
+				var xForm = document.getElementById("xForm");
+				xForm.style.visibility = "hidden";
+				loginRegister.style.visibility = "hidden";
+			}
+			function jumpPage(page, per, cat) {
+				window.location.replace("http://agamedesigner.info/index2.php?pg="+page+"&per="+per+"&cat="+cat+"");
+			}
+			function userPerPage(cat) {
+				var numPerPage = document.getElementById("perPage");
+				var userSelected = numPerPage.options[numPerPage.selectedIndex].value;
+								
+				window.location.replace("http://agamedesigner.info/index2.php?pg=1&per="+userSelected+"&cat="+cat+"");
+			}
+			
+			
+						
+			function showPic(pic, width, height, series, numInSeries){
+				event.stopPropagation();
+				var viewerBack = document.getElementById("picViewerBack");
+				var picToChange = document.images["picView"];
+				var picToChangeSpan = document.getElementById("picViewSpan");
+				var picTable = document.getElementById("picTable");
+				var picPrev = document.getElementById("picPrev");
+				var picNext = document.getElementById("picNext");
+				var picPrevDiv = document.getElementById("picPrevDiv");
+				var picNextDiv = document.getElementById("picNextDiv");
+				var picPrevSpan = document.getElementById("picPrevSpan");
+				var picNextSpan = document.getElementById("picNextSpan");
+				var previousImage = document.getElementById("previousImage");
+				var nextImage2 = document.getElementById("nextImage2");
+				var button = document.getElementById("menuButton");
+				var menu = document.getElementById("menuBalloon");
+				var loginRegister = document.getElementById("loginRegister");
+				var xForm = document.getElementById("xForm");
+				viewerBack.style.visibility = "visible";	
+				if (button.src == "http://agamedesigner.info/menu2.png") {
+					button.src="menu.png";
+					menu.style.left = -500;
+				}
+				if (loginRegister.style.visibility == "visible") {
+					loginRegister.style.visibility = "hidden";
+					xForm.style.visibility = "hidden";
+				}
+				
+				if (series == 1){
+					newPic = "http://agamedesigner.info/images/"+pic;
+					picToChange.src = newPic;
+					picToChange.width = width;
+					picToChange.height = height;
+					windowHeight = window.innerHeight;
+					windowWidth = window.innerWidth;
+					picWidth = windowWidth * .70;
+					picHeight = windowHeight * .95;
+					
+					if (picToChange.height > picHeight){
+						newWidth = width / height * picHeight;
+						picToChange.width = newWidth;
+						picToChange.height = picHeight;
+					}
+					if (picToChange.width > picWidth){
+						newHeight = picToChange.height / picToChange.width * picWidth;
+						picToChange.width = PicWidth;
+						picToChange.height = newHeight;
+					}
+				} else {
+					newPic = series;
+					workingNumber = series.substr(-6,1); // checks to see if the num_in_series being viewed is <= or > 9
+					if (workingNumber == "-"){
+						workingNumber = series.substr(-5,1);
+					} else {
+						workingNumber = series.substr(-6,2);
+					}
+					workingNumberI = Number(workingNumber);  // checks the current number if it is the first or last and defines the prev and next 
+					if (workingNumberI == 1){
+						prevImageNumber = numInSeries;
+						nextImageNumber = 2;
+					} else if (workingNumberI == numInSeries){
+						prevImageNumber = workingNumberI-1;
+						nextImageNumber = 1;
+					} else {
+						prevImageNumber = workingNumberI-1;
+						nextImageNumber = workingNumberI+1;
+					}
+					prevImage = series.replace(workingNumber + ".", prevImageNumber + ".");
+					nextImage = series.replace(workingNumber + ".", nextImageNumber + ".");
+					
+					//picToChange.src = newPic;
+					picToChangeSpan.innerHTML = '<img src="' + newPic + '" id="picView" class="picView" onClick="showPic(0,0,0,'+newPic+', '+numInSeries+')">';		
+					var picToChange = document.images["picView"];
+					width = picToChange.width;
+					height = picToChange.height;
+					
+					// Adjusts Main pic (picToChange) to fit in Viewer at 80%
+					mWidth = window.innerWidth *.7;
+					mHeight = window.innerHeight *.95;
+					if (height > mHeight) {
+						newWidth = width / height * mHeight;
+						newHeight = mHeight;
+					} else {
+						newWidth = width;
+						newHeight = height;
+					}
+					if (newWidth > mWidth){
+						newHeight = newHeight / newWidth * mWidth;
+						newWidth = mWidth;
+					}
+					picToChangeSpan.innerHTML = '<img src="' + newPic + '" id="picView" class="picView" width="'+newWidth+'" height="'+newHeight+'" onClick="showPic(0,0,0,'+"nextImage"+', '+numInSeries+')">';		
+					
+					
+					
+					
+					picPrevSpan.innerHTML = '<img id="picPrev" class="picViewL" src="'+prevImage+'" onClick="showPic(0,0,0,'+"prevImage"+', '+numInSeries+')">';
+					var picPrev = document.getElementById("picPrev");
+					
+					picNextSpan.innerHTML = '<img id="picNext" class="picViewR" src="'+nextImage+'" onClick="showPic(0,0,0,'+"nextImage"+', '+numInSeries+')">';
+					var picNext = document.getElementById("picNext");
+					// Gathers variable definitions for next & previous image dimensions
+					
+					
+					pIWidth = picPrev.clientWidth;
+					pIHeight = picPrev.clientHeight;
+					nIWidth = picNext.clientWidth;
+					nIHeight = picNext.clientHeight;
+					
+					// Definining next & previous images' boundaries
+					pNWidthMax = window.innerWidth * .5;
+					pNHeightMax = window.innerHeight * .5;
+					
+					
+					// Resizing Previous Image
+					if (pIWidth > pNWidthMax) {
+						pIHeight = pIHeight / pIWidth * pNWidthMax;
+						pIWidth = pNWidthMax;
+					} 
+					if (pIHeight > pNHeightMax) {
+						pIWidth = pIWidth / pIHeight * pNHeightMax;
+						pIHeight = pNHeightMax;
+					}
+					picPrev.width = pIWidth;
+					picPrev.height = pIHeight;
+					
+					// Resizing Next Image to fit & Defining Next image's left number
+					if (nIWidth > pNWidthMax) {
+						nIHeight = nIHeight / nIWidth * pNWidthMax;
+						nIWidth = pNWidthMax;
+					} 
+					if (nIHeight > pNHeightMax) {
+						nIWidth = nIWidth / nIHeight * pNHeightMax;
+						nIHeight = pNHeightMax;
+					}
+					picNext.width = nIWidth;
+					picNext.height = nIHeight;
+					
+					nILeft = window.innerWidth - nIWidth;
+					picNextDiv.style.left = nILeft;
+					pILeft = pIWidth * .6 * -1;
+					nILeft = nIWidth * .6 + nILeft;
+					picNextDiv.style.left = nILeft;
+					picPrevDiv.style.left = pILeft;
+					
+					// Centering Previous & Next images vertically
+					pCenter = (window.innerHeight - picPrev.height) / 2;
+					nCenter = (window.innerHeight - picNext.height) / 2;
+					picPrevDiv.style.top = pCenter;
+					picNextDiv.style.top = nCenter;
+					previousImage.style.top = pCenter - 50;
+					nextImage2.style.left = window.innerWidth - 100;
+					nextImage2.style.top = nCenter - 50;
+				}
+			}
+			function hideWindow(id){
+				var bWindow = document.getElementById(id);
+				var picPrev = document.getElementById("picPrevSpan");
+				var picNext = document.getElementById("picNextSpan");
+				if (id != "picView"){
+					bWindow.style.visibility = "hidden";
+					picPrev.innerHTML = "<img id=\"picPrev\" class=\"picViewL\" src=\"\">";
+					picNext.innerHTML = "<img id=\"picNext\" class=\"picViewR\" src=\"\">";
+				}
+			}
+			function nPShow(id){
+				var previousImage = document.getElementById("previousImage");
+				var nextImage2 = document.getElementById("nextImage2");
+				if (id == "picPrevDiv"){
+					previousImage.style.visibility = "visible";
+				} else if (id == "picNextDiv") {
+					nextImage2.style.visibility = "visible";
+				}
+			}
+			function nPHide(id){
+				var previousImage = document.getElementById("previousImage");
+				var nextImage2 = document.getElementById("nextImage2");
+				if (id == "picPrevDiv"){
+					previousImage.style.visibility = "hidden";
+				} else if (id == "picNextDiv") {
+					nextImage2.style.visibility = "hidden";
+				}
+			}
+			
+			function favorite(id){
+				getImage = document.getElementById(id);
+				xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange=function() {
+    				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+     				 document.getElementById(id).innerHTML=xmlhttp.responseText;
+   					}
+ 				}
+				
+				xmlhttp.open("GET","savefav.php?img="+id,true);
+				xmlhttp.send();
+			}
+			
+			function comm(id,imageNumber){
+				commentSpan = document.getElementById(id);
+				commentSpanId = commentSpan.id;
+				id = "comm2"+id;
+			    commentSpan.innerHTML='<form name="comments"><textarea id="'+id+'" cols="50" rows="3" name="comments" align="center">Leave your comments here.</textarea><br><br><input type="button" value="Leave Comment" onClick="comm2(`'+commentSpanId+'`,'+imageNumber+')"></form>';
+			}
+			
+			function comm2(commentSpan, imageNumber) {
+				var id = 'comm2'+commentSpan;
+				picNum = imageNumber;
+				userComment = document.getElementById(id);
+				xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange=function() {
+    				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+     				 document.getElementById(commentSpan).innerHTML=xmlhttp.responseText;
+   					}
+ 				}
+				xmlhttp.open("GET","savecomment.php?picNum="+picNum+"&span="+commentSpan+"&comm="+userComment.value+"",true);
+				xmlhttp.send();
+			}
+			
+			function catStart(cat){
+				xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange=function() {
+    				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+     				 document.getElementById("startCat").innerHTML=xmlhttp.responseText;
+   					}
+ 				}
+				xmlhttp.open("GET","startcat.php?cat="+cat+"",true);
+				xmlhttp.send();			
+			}
+			
+			function logout(){
+				window.location = "logout.php";
+			}
+			function alerted(){
+				alert("clicked");
+			}
+		</script>  
+        
+        <!-- MySQLi Connections //-->
+        	<?php
+				if (isset($_GET[cat]) && $_GET[cat] != ""){
+					$cat = $_GET[cat];
+				} else {
+					$cat = "normal";
+				}
+				
+				$database = mysqli_connect("localhost", "gatene_seo", "password", "gatene");
+				
+				$new_pics = "SELECT new FROM images WHERE new='1'";
+				$result_of = mysqli_query($database, $new_pics);
+				$new_pic_rows = mysqli_num_rows($result_of);
+				mysqli_free_result($result_of);
+				
+				$getTotal = "SELECT number FROM images ORDER BY number DESC LIMIT 1";
+				$totalImages = mysqli_query($database, $getTotal);
+				$totalFetch = mysqli_fetch_assoc($totalImages);
+				$numberTotal = $totalFetch[number];
+				mysqli_free_result($totalImages);
+				unset($totalFetch);
+				
+				if ($cat != "normal"){
+					$table_data = "SELECT number FROM images WHERE $cat = '1' ORDER BY number DESC";
+					$resultNum = mysqli_query($database, $table_data);
+					$number = mysqli_num_rows($resultNum);
+				} else {
+					$table_data = "SELECT number FROM images ORDER BY number DESC LIMIT 1";
+					$resultNum = mysqli_query($database, $table_data);
+					$num = mysqli_fetch_assoc($resultNum);  
+					$number = $num['number'];
+				}
+				mysqli_free_result($resultNum);
+				
+							
+				// This section is for global variables used in the entire HTML document
+					// $number is the number of pictures and videos in the blog's database
+					if (isset($_GET[pg])){
+						$page = $_GET[pg];
+						$_SESSION[pg] = $page;
+					} else {
+						$page = 1;
+						$_SESSION[pg] = 1;} // If the page # is defined in the URL, then $page is the variable for the page #
+					if (isset($_GET[per])){
+						$perPage = $_GET[per];
+						$_SESSION[per] = $perPage;
+					} else {
+						$perPage = 10;
+						$_SESSION[per] = 10;} // If user has set the maximum # of pics per page, $perpage is that variable
+					$_SESSION[cat] = $cat;
+					if (isset($_SESSION[fav]) && $_SESSION[fav] != ""){
+						$fav = $_SESSION[fav];
+					}
+					$possiblePages = ceil($number / $perPage); // $possibilePages is how many pages of pics and vids there can be
+					$adjPage = $page - 1; 
+					$getMultiplier = $adjPage * $perPage; 
+					if ($cat != "normal"){
+						$startOnPic = $adjPage * $perPage + 1;
+						$adjPer = $perPage - 1;
+						$endOnPic = $adjPer;
+					} else {
+						$startOnPic = $number - $getMultiplier; // Identifies the pic # the current page starts with
+				   		$endOnPic = $startOnPic - $perPage; // Identifies the pic # the current page ends with
+					}
+				// End Global Variables
+			?>
+        
+        <!-- Setting up Display DIVs //-->
+        <div id="picViewerBack" class="picViewerBack" onClick="hideWindow(this.id)" ">
+            <div id="previousImage" class="previousImage">
+                	<span id="previousImageSpan">
+                    	<img src="previousImage.png">
+                    </span>
+            </div>
+            <div id="nextImage2" class="nextImage2">
+                	<span id="nextImageSpan">
+                    	<img src="nextImage.png">
+                    </span>
+            </div>
+            <div class="picPrevDiv" id="picPrevDiv" onMouseOver="nPShow(this.id)" onMouseOut="nPHide(this.id)">
+                  <span id="picPrevSpan">
+                  	<img id="picPrev" class="picViewL">
+                  </span>
+            </div>
+            <div class="picNextDiv" id="picNextDiv" onMouseOver="nPShow(this.id)" onMouseOut="nPHide(this.id)">
+                	<span id="picNextSpan">
+                    	<img id="picNext" class="picViewR">
+                    </span>
+            </div>
+               
+            <center>
+                <table class="picViewer" id="picTable" cellspacing="0" cellpadding="0" border="0">
+                	<tr>
+                    	<td valign="middle" class="picViewCenter">
+                        	<span id="picViewSpan">
+                            	<img id="picView" class="picView" src="enter.png">
+                            </span></td>
+                    </tr>
+                </table>
+                </center>
+        	
+            	
+        </div>
+        <div class="xForm" id="xForm">
+        	<img src="xForm.png" title="Close Log In / Registration Window" onClick = "xFormClose()">
+        </div>
+        <div class="loginRegister" id="loginRegister">
+        	<div class="loginRegisterInner" id="loginRegisterInner">
+            	<center>
+                <table border=0 cellspacing=0 cellpadding=0 class="formHead"><tr><td class="formHead">Log In</td></tr></table><br>
+                <form name="login" method="post" action="login.php">
+                <table name="login" border=0 cellspacing=0 cellpadding=0>
+                	<tr>
+                    	<td class="tableForm">
+                        	Username: 
+                        </td>
+                        <td>
+                        	<input type="name" name="user">
+                        </td>
+                        <td rowspan="3" valign="middle">
+                        	&nbsp;&nbsp;<input type="submit" value="Log In">&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                    <tr><td>&nbsp;</td></tr>
+                    <tr>
+                    	<td class="tableForm">
+                        	Password:
+                        </td>
+                        <td>
+                        	<input type="password" name="pass">
+                        </td>
+                    </tr>
+                    <tr><td>&nbsp;</td></tr>
+                    <tr>
+                        <td colspan="3" align="center">
+                        	&nbsp;&nbsp;<span class="fakeLink2" onClick="location.href=`forgot.php`">Forgot Username / Password</span>
+                            
+                        </td>
+                    </tr>
+                </table>
+                </form><br>
+                <table border=0 cellspacing=0 cellpadding=0 class="formHead"><tr><td class="formHead">Register</td></tr></table><br>
+                <form name="register" method="post" action="register.php">
+                <table name="register" border=0 cellspacing=0 cellpadding=0>
+                	<tr>
+                    	<td class="tableForm">
+                        	Username:
+                        </td>
+                        <td>
+                        	<input type="name" name="user" maxlength="12">
+                        </td>
+                        <td class="tableForm">
+                        	&nbsp;&nbsp;E-Mail: 
+                        </td>
+                        <td>
+                        	<input type="email" name="email">
+                        </td>
+                    </tr>
+                    <tr><td>&nbsp;</td></tr>
+                    <tr>
+                    	<td class="tableForm">
+                        	Password:
+                        </td>
+                        <td>
+                        	<input type="password" name="pass">
+                        </td>
+                        <td class="tableForm">
+                        	&nbsp;&nbsp;First Name: 
+                        </td>
+                        <td>
+                        	<input type="name" name="fname" maxlength="14">
+                        </td>
+                    </tr>
+                    <tr><td>&nbsp;</td></tr>
+                    <tr>
+                    	<td class="tableForm">
+                        	Password<br>Again<br>
+                        </td>
+                        <td valign="middle">
+                        	<input type="password" name="passVerify">
+                        </td>
+                        <td rowspan="2" colspan="2">&nbsp;&nbsp;
+                         &nbsp;&nbsp;<div class="g-recaptcha" data-sitekey="6LcdUhATAAAAAFjGKksqvAr64msUmbmhEsxxiVu-"></div> <!--Recaptcha Bit//-->
+                        </td>
+                    </tr>
+                    <tr>
+                    	<td colspan="2">
+                        	<center><input type="submit" value="Register"></center>
+                  		</td>
+                    </tr>
+                </table>
+                </form>
+                </center>
+            </div>
+        </div>
+        	<div class="main">
+            	<div class="menus">
+                 <div class="menusContainer">	
+                 	&nbsp;&nbsp;
+                 	<img id="menuButton" src="menu.png" onClick="menuButtonClick()" title="Click to View Menu">
+                	<?php
+						echo('&nbsp;Today\'s new images: <b>'.$new_pic_rows.'</b>&nbsp;&nbsp;/&nbsp;&nbsp;Total images: <b>'.$numberTotal.'</b>');
+					?>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              		<a class="caticonlink" href="https://www.google.com/chrome/browser/" target="_new"><img src="chrome.png"
+                    	title="Download Google Chrome (Works Best With)"></a>
+  			  		<a class="caticonlink" href="http://support.apple.com/downloads/#safari" target="_new"><img src="safari.png"
+                    	title="Download Apple Safari"></a>
+  			 	    <a class="caticonlink" href="http://www.opera.com" target="_new"><img src="opera.png"
+                    	title="Download Opera"></a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                   
+           			<a class="simplenounder" href="mailto::gatene@agamedesigner.info" title="E-Mail me your comments and submissions.">gatene@agamedesigner.info</a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Welcome, 
+                    	<?php
+							if (isset($_SESSION[user]) && $_SESSION[user] != "") {
+								if ($_SESSION[fname] != "") {
+									echo ($_SESSION[fname].'&nbsp;&nbsp;<span class="rLLink" title="Click To Log Out" onClick="logout()">Logout</span>');
+								} else {
+									echo ($_SESSION[user].'&nbsp;&nbsp;<span class="rLLink" title="Click To Log Out" onClick="logout()">Logout</span>');
+								}
+							} else {
+								echo ('<span class="rLLink" title="Click to Register / Login" onClick="showRL()">Guest</span>');
+							}
+						?>
+                 </div>  
+                </div>
+                
+                <div class="menuDiv" id="menuBalloon">
+                	<table id="menu" class="menu" cellspacing=2>
+                    	<tr>
+                        	<td class="menuItem">
+                            	<?php
+									if (isset($_SESSION[user]) && $_SESSION[user] != ""){
+										if ($_SESSION[fname] != ""){
+											echo('Welcome, '.$_SESSION[fname].'!</td></tr>
+											<tr>
+											 <td class="menuItem"><span class="fakeLink" title="Click to Log Out" onClick="logout()">Logout</span>');
+										} else {
+											echo('Welcome, '.$_SESSION[user].'!</td></tr>
+											<tr>
+											 <td class="menuItem"><span class="fakeLink" title="Click to Log Out" onClick="logout()">Logout</span>');
+													  }
+									} else {
+										echo('<span class="fakeLink" onClick="showRL()">Login / Register</span>');
+									}
+								?>
+                            </td>
+                        </tr>
+                    </table>
+                </div>  
+                
+                <div class="catTitle">
+                <?php
+					switch ($cat) {
+						case "normal":
+							$head = "Updated daily with various pics gathered from the web.";
+							break;
+						case "Category 2":
+							$head = "Heading 2";
+							break;
+						case "Category":
+							$head = "Heading 3";
+							break;
+						case "Category":
+							$head = "Heading 4";
+							break;
+						case "Category":
+							$head = "Heading 5";
+							break;
+						case "Category":
+							$head = "Heading 6";
+							break;
+						case "Category":
+							$head = "Heading 7";
+							break;
+						case "Category":
+							$head = "Heading 8";
+							break;
+						case "Category":
+							$head = "Heading 9";
+							break;
+						case "Category":
+							$head = "Heading 10";
+							break;
+						case "Category":
+							$head = "Heading 11";
+							break;
+						case "Category":
+							$head = "Heading 12";
+							break;
+						case "Category":
+							$head = "Heading 13";
+							break;
+						case "Category":
+							$head = "Heading 14";
+							break;
+						case "Category":
+							$head = "Heading 15";
+							break;
+						case "Category":
+							$head = "Heading 16";
+							break;
+						case "Category":
+							$head = "heading 17";
+							break;
+						case "Category":
+							$head = "Heading 18";
+							break;
+						case "Category":
+							$head = "Heading 19";
+							break;
+						case "Category":
+							$head = "Heading 20";
+							break;
+						case "Category":
+							$head = "Heading 21";
+							break;
+						case "Category":
+							$head = "Heading 22";
+							break;
+						case "Category":
+							$head = "Heading 23";
+							break;
+						case "Category":
+							$head = "Heading 24";
+							break;
+						case "Category":
+							$head = "Heading 25";
+							break;
+						case "Category":
+							$head = "Heading 26";
+							break;
+						case "Category":
+							$head = "Heading 27";
+							break;
+						case "Category":
+							$head = "Heading 28";
+							break;
+						case "Category":
+							$head = "Heading 29";
+							break;
+						case "Category":
+							$head = "Heading 30";
+							break;
+						case "Category":
+							$head = "Heading 31";
+							break;
+						case "Category":
+							$head = "Heading 32";
+							break;
+						case "Category":
+							$head = "Heading 33";
+							break;
+						case "Category":
+							$head = "Heading 34";
+							break;
+						case "Category":
+							$head = "Heading 35";
+							break;
+						case "Category":
+							$head = "Heading 36";
+							break;
+						case "Category":
+							$head = "Heading 37";
+							break;
+						case "Category":
+							$head = "Heading 38";
+							break;
+						case "Category":
+							$head = "Heading 39";
+							break;
+						case "Category":
+							$head = "Heading 40";
+							break;
+						case "Category":
+							$head = "Heading 41";
+							break;
+						case "Category":
+							$head = "Heading 42";
+							break;
+						case "Category":
+							$head = "Heading 43";
+							break;
+						case "Category":
+							$head = "Heading 44";
+							break;
+						case "Category":
+							$head = "Heading 45";
+							break;
+						case "Category":
+							$head = "Heading 46";
+							break;
+						case "Category":
+							$head = "Heading 47";
+							break;
+						case "Category":
+							$head = "Heading 48";
+							break;
+						case "Category":
+							$head = "Heading 49";
+							break;
+						case "Category":
+							$head = "Heading 50";
+							break;
+						case "Category":
+							$head = "Heading 51";
+							break;
+						case "Category":
+							$head = "Heading 52";
+							break;
+						case "Category 53":
+							$head = "Heading 53";
+					}
+					echo ('<center><table style="messagehead" name="headWMessage">
+							<tr>
+								
+								<td> 
+						   				<center><h1 class="heading">A Gay Blog</h1></center><h2 class="heading"><center>'.$head.'</center></h2>
+						   		</td>
+						   	</tr>
+						   </center></table>');
+					
+					if (isset($_SESSION[user]) && $_SESSION[user] != "" && $cat != $fav){
+					echo('<span id="startCat" class="darkbu"><input class="bigger" type="button" value="Start with this category when you log in."
+							   title="Click here to start with this category whenever you log into the site." onClick="catStart(\''.$cat.'\')">
+							  </span></center>');
+					} else {
+						echo ('</center>');
+					}
+				?>
+                
+                </div>
+                
+                <div class="leftPane">
+                	<!-- Intial <br>'s to make the left pane look right //-->
+                    <!-- End Initial //-->
+                    
+                    <!-- Left Pane's Photo / Video Entries //-->
+                	<table name="entryTable" class="entry" border=0 cellspacing=0 cellpadding=0>
+                    	<tr>
+                        
+                        	<td class="rightPane">
+                            	<span class="darkbu">Categories</span><br><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'normal')">All Pics /<br>No Category</span><br><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category 2</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>  
+								<span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>    
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>
+                                <span class="darkLink" onClick="jumpPage(1,10,'Category')">Category</span><br>                            
+                            
+                            <br><br><br>
+                            <?php
+                            
+							switch ($cat) {
+								case "Category":
+									echo('<a class="caticonlink" href="Link to Ad"
+										   target="_new"><img class="stock" title=""
+										   				 src="Image">
+										  </a>');
+								break;
+								case "Category":
+									echo('<a class="caticonlink" href="Link to Ad"
+										   target="_new"><img class="stock" title=""
+										   				 src="">
+										  </a>');
+								break;
+								case "Category":
+									echo('<a class="caticonlink" href="Link to Ad"
+										   target="_new"><img class="stock" title=""
+										   				 src="">
+										  </a>');
+								break;
+								case "Category":
+									echo('<a class="caticonlink" href="Link to Ad"
+										   target="_new"><img class="stock" title=""
+										   				 src="">
+										  </a>');
+								break;
+								case "Category":
+									echo('<a class="caticonlink" href="Link to Ad"
+										   target="_new"><img class="stock" title=""
+										   				 src="">
+										  </a>');
+								break;
+								case "Category":
+									echo('<a class="caticonlink" href="Link to Ad"
+										   target="_new"><img class="stock" title=""
+										   				 src="">
+										  </a>');
+								break;
+								case "Category":
+									echo('<a class="caticonlink" href="Link to Ad"
+										   target="_new"><img class="stock" title=""
+										   				 src="">
+										  </a>');
+								break;
+								case "Category":
+									echo('<a class="caticonlink" href="Link to Ad"
+										   target="_new"><img class="stock" title=""
+										   				 src="">
+										  </a>');
+								break;
+								case "Category":
+									echo('<a class="caticonlink" href="Link to Ad"
+										   target="_new"><img class="stock" title=""
+										   				 src="">
+										  </a>');
+								break;
+								case "Category":
+									echo('<a class="caticonlink" href="Link to Ad"
+										   target="_new"><img class="stock" title=""
+										   				 src="">
+										  </a>');
+								break;
+                            	default:
+									echo('<a class="caticonlink" href="Link to Ad"
+										   target="_new"><img class="stock" title=""
+										   				 src="">
+										  </a>');
+								break;
+                            }
+							
+							?>
+                        	</td>
+                            
+                             <td class="leftPane">
+                                
+                                <!-- Actual Border //-->
+                                	<?PHP
+									   if ($cat != "normal"){
+										$testPage = "SELECT * FROM images WHERE $cat = '1' ORDER BY number DESC";
+									   } else {
+									    $testPage = "SELECT * FROM images WHERE number <= ".$startOnPic." AND number >= ".$endOnPic." AND name != '' ORDER BY number DESC LIMIT ".$perPage;
+									   }
+										$test_query = mysqli_query($database, $testPage) or die ('Error: '.mysqli_error($database));
+										if ($cat != "normal"){
+											$recordCountCat = mysqli_num_rows($test_query);
+											$startOnPicCat = $page * $perPage - $perPage;
+											$endOnPicCat = $page * $perPage - 1;
+											if ($startOnPicCat < 0){
+												$startOnPicCat = 0;
+											}
+											
+											mysqli_data_seek($test_query, $startOnPicCat);
+											$offset = $startOnPicCat;
+											if ($offset < 0){
+												$offset = 0;
+											}
+										} else { $offset = false; }
+										while ($row = mysqli_fetch_assoc($test_query)){
+											if (substr($row[name], -4, 1) == ".") {
+											  $workingImage = "/images/".$row[name]; // Applies the current image to the variable
+											  $imageDir = "/home4/gatene/agamedesigner.info/images/";
+											  $currentImage = $row[name];
+											  $iDimensions = getimagesize("http://agamedesigner.info/images/".$currentImage, $imageAttrib);
+											  
+											  
+											 if ($row[width]) {
+											 	$iWidth = $row[width];
+											 	$iHeight = $row[height];
+											 	$newWidth = 500;
+											 	$newHeight = $iHeight / $iWidth * 500;
+											 } else {
+											 	$iWidth = $iDimensions[0];
+											 	$iHeight = $iDimensions[1];
+											    $newWidth = 622;
+											    $newHeight = $iHeight / $iWidth * 622; //622
+											 }
+											  
+											  											  
+											
+											echo ('
+											<table name="border" border=0 cellspacing=0 cellpadding=0>
+											
+												<tr>
+													<td class="borderTopLeft"></td>
+													<td class="borderTopCenter"></td>
+													<td class="borderTopRight"></td>
+												</tr>
+												<tr>
+													<td class="borderLeft"></td>
+													<td class="borderContent">
+																			   ');
+											
+											if (substr($currentImage,-6,1) == "-"){
+											   $currentImage = substr($currentImage,-5,1);
+										   } elseif (substr($currentImage -7,1) == "-"){
+											   $currentImage = substr($currentImage,-6,2);
+										   } elseif (substr($currentImage,-8,1) == "-"){
+											   $currentImage = substr($currentImage,-7,3);
+										   } elseif (substr($currentImage,-9,1) == "-"){
+											   $currentImage = substr($currentImage,-8,4);
+										   } elseif (substr($currentImage,-10,1) == "-"){
+											   $currentImage = substr($currentImage,-9,5);
+										   } elseif (substr($currentImage,-11,1) == "-"){
+											   $currentImage = substr($currentImage,-10,6);
+										   } //$currentImage is the variable that holds the imageSet's name's number
+											
+										   $commGreat = "comm".$currentImage;
+										   
+										   if ($row[width]) {
+										   	$poster = "v".$row[name].".png";
+										   	echo ('<video style="cursor:hand" width="'.$newWidth.'" height="'.$newHeight.'" poster="/images/'.$poster.'" onclick="this.play()" controls>
+										   			  <source src="/images/'.$row[name].'"
+										   			          type="video/mp4">
+										   		   </video>');
+										   } else {											
+										   echo ('<img class="stock" id="'.$row[name].'" src="'.$workingImage.'" 
+												 width="'.$newWidth.'" height="'.$newHeight.'"
+												 title="Single Image, '.$row[name].'. Picture #'.$row[number].'"
+												 onClick="showPic(this.id, '.$iWidth.', '.$iHeight.', 1, 1)">');
+										   }
+
+										   echo ('<br><br>
+												  <span class="light"><i><b>Comments:</b></i></span>&nbsp;&nbsp;');
+
+											if ($row[comment] != "") {
+											   echo ('<table border=0 cellspacing=6 cellpadding=0><tr><td align="right">
+													 <a class="owner" href="mailto::gayblog.agamedesigner.info">Gatene:</a> </span></td>
+													 <td><span class="white">'.$row[comment].'</span></td></tr>');
+											}else{
+												echo ('<table border=0 cellspacing=0 cellpadding=0>'); }
+															
+											$getCommQuery = "SELECT user, comment FROM notes WHERE pic=$row[number]";
+											$commQuery = mysqli_query($database, $getCommQuery);
+											if ($commQuery){
+												$commQueryRows = mysqli_num_rows($commQuery);
+											} else {
+												$commQueryRows = 0;
+											}
+											if ($commQueryRows > 0){
+												$commRows = 1;
+												while ($commRow = mysqli_fetch_assoc($commQuery)){
+													$userInfo = "SELECT user FROM users WHERE number = ".$commRow[user];
+													$infoQuery = mysqli_query($database, $userInfo);
+													$userFetch = mysqli_fetch_assoc($infoQuery);
+													$userComm = $userFetch[user];
+													if ($commRows == 1){
+														$commRows = 2;
+														echo('<tr><td align="right">
+														   &nbsp;&nbsp;<span class="commentOwner2">'.$userComm.':</span></td>
+														   <td>&nbsp;&nbsp;<span class="light">'.$commRow[comment].'</span></td>
+														   </tr>');
+													} else {
+														$commRows = 1;
+														echo('<tr class="shadow"><td align="right">
+															&nbsp;&nbsp;<span class="commentOwner1">'.$userComm.':</span></td>
+															<td>&nbsp;&nbsp;<span class="white">'.$commRow[comment].'</span></td>
+															</tr>');
+													}
+												}
+												echo('</table>');
+											} else {
+												echo ('<tr><td>&nbsp;&nbsp;<i>None</i></td></tr></table>');
+											}
+															
+															
+											if ($commQuery){
+												mysqli_free_result($commQuery);
+											}
+															
+											if ($_SESSION[user]){			
+											  $spanId='comm'.$currentImage;
+											  echo('<br><img class="fav" src="/icons/notes_nobg.png" title="Click to Comment" align="center" onClick="comm(`'.$spanId.'`,'.$row[number].')">
+															  &nbsp;&nbsp;<span id="'.$spanId.'"><a class="comment" title="Click to Comment" onClick="comm(`'.$spanId.'`,'.$row[number].')">Leave your own comments</a></span><br><br>');
+														  // Creates Comments Spiel clickable and dynamic
+											  } else {
+												  echo('<br><img src="/icons/notes_nobg.png" title="Log in / Register to Comment" align="center">	
+														&nbsp;&nbsp;<span class="comment">Log in / Register to Comment"</span><br><br>');
+											  }
+											
+											if (isset($_SESSION[user]) && $_SESSION[user] != ""){
+																 
+											
+													//Finding out which FAVORITE emoticon to show
+											   $favVar = "SELECT user FROM fav WHERE number=".$currentImage." AND user=$_SESSION[usernum]";
+												
+												$favQuery = mysqli_query($database,$favVar);
+												if ($favQuery){
+													$favNumRows = mysqli_num_rows($favQuery);
+													mysqli_free_result($favQuery);
+												} else {
+													$favNumRows = 0;
+												}
+												echo ('<div id="'.$currentImage.'">');
+												if ($favNumRows > 0 && $_SESSION[user]) {
+													echo('<img class="fav" src="/icons/drool_nobg.png" title = "You Like This Image" onClick="favorite('.$currentImage.')" align="center">&nbsp;&nbsp;&nbsp;<span class="like" title="Click to Unlike This Image" onClick="favorite('.$currentImage.')">Click to Unlike</span></div>');
+												} else {
+													  echo('<img class="fav" src="/icons/drool_bw_nobg.png" title = "Click to Like This Image" onClick="favorite('.$currentImage.')" align="center">&nbsp;&nbsp;&nbsp;<span class="like" title="Click to Like This Image" onClick="favorite('.$currentImage.')">Click to Like</span></div>');
+												} 
+											} else {
+												echo ('<img src="/icons/drool_bw_nobg.png" title="Register to &quot;Like&quot; Image Posts" align="center">&nbsp;&nbsp;&nbsp;<span class="comment">Log in / Register to &quot;Like&quot; Image Posts.</span>');
+											}
+											//Starting Category List Under Each Photo
+											echo('<br><br>
+												  <table border=0 cellspacing=0 cellpadding=0>
+												  	<tr>
+														<td>
+															<span class="cat">Categories:&nbsp;</span>
+														</td>
+														<td>
+															<span class="like" onClick="jumpPage(1,10,\'normal\')">No Category,&nbsp;</span>');
+															if ($row[alone] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category</span>'); }
+															if ($row[Category] == 1){echo ('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category</span>');}
+														echo('</td>
+													</tr>
+												   </table>
+												 ');
+											//Ended Category List Under Each Photo
+														
+											echo('
+												 	</td>
+													<td class="borderRight"></td>
+												</tr>
+												<tr>
+													<td class="borderBottomLeft"></td>
+													<td class="borderBottomCenter"></td>
+													<td class="borderBottomRight"></td>
+												</tr>
+											</table>
+											
+											<br>');   // Ends solo Image Output
+											
+											} else {
+											  $imageDir = "/home4/gatene/agamedesigner.info/images/".$row[name].'/'.$row[name];
+											  $imageFolder = "/home4/gatene/agamedesigner.info/images/".$row[name].'/';
+											  $picInSeries = $row[number_in_series];
+												
+												echo ('
+											<table name="border" border=0 cellspacing=0 cellpadding=0>
+											
+												<tr>
+													<td class="borderTopLeft"></td>
+													<td class="borderTopCenter"></td>
+													<td class="borderTopRight"></td>
+												</tr>
+												<tr>
+													<td class="borderLeft"></td>
+													<td class="borderContent">
+																			   ');
+												
+												           for ($picCount = 1; $picCount <= $picInSeries; $picCount++){
+															   $existJpg = $imageDir.'-'.$picCount.'.jpg';
+															   $existGif = $imageDir.'-'.$picCount.'.gif';
+															   $existPng = $imageDir.'-'.$picCount.'.png';
+															   $existMp4 = $imageDir.'-'.$picCount.'.mp4';
+															   
+															   
+															   
+															   if (file_exists($existJpg)){
+																   $workingImage = '/images/'.$row[name].'/'.$row[name].'-'.$picCount.'.jpg';
+														           $iDimensions = getimagesize("http://agamedesigner.info".$workingImage,					
+																				  $imageAttrib);
+																   $iWidth = $iDimensions[0];
+											                       $iHeight = $iDimensions[1];
+											  
+											  					   $newWidth = 290;
+											                       $newHeight = $iHeight / $iWidth * 290;
+																   
+															    echo ('<img class="stock" src="'.$workingImage.'" title="ImageSet, '.$row[name].'. 
+																  Picture #'.$picCount.' of '.$picInSeries.'" width="'.$newWidth.'" 
+																  height="'.$newHeight.'" id="'.$workingImage.'"
+																  onClick="showPic(this.id, '.$iWidth.', '.$iHeight.', \''.$workingImage.'\', 
+																				   '.$picInSeries.')">');
+																  
+																  $remainder = $picCount % 2;
+																  if ($remainder > 0 && $picCount != $picInSeries) {
+																	  echo ('&nbsp;&nbsp;&nbsp;&nbsp;');
+																  } elseif ($remainder > 0 && $picCount == $picInSeries) {
+																	  echo ('<br><br>');
+																  } elseif ($remainder == 0 && $picCount != $picInSeries) {
+																	  echo ('<br><br>');
+																  } elseif ($remainder == 0 && $picCount == $picInSeries) {
+																	  echo ('<br><br>');
+																  }  // ends if that checks for odd and even #s
+																  
+															   }  elseif (file_exists($existGif)) {
+																   $workingImage = '/images/'.$row[name].'/'.$row[name].'-'.$picCount.'.gif';
+														           $iDimensions = getimagesize("http://gayblog.agamedesigner.info".$workingImage,					
+																				  $imageAttrib);
+																   $iWidth = $iDimensions[0];
+											                       $iHeight = $iDimensions[1];
+											  
+											  					   $newWidth = 290;
+											                       $newHeight = $iHeight / $iWidth * 290;
+																   
+															     echo ('<img class="stock" src="'.$workingImage.'" title="ImageSet, '.$row[name].'. 
+																  Picture #'.$picCount.' of '.$picInSeries.'" width="'.$newWidth.'" 
+																  height="'.$newHeight.'" id="'.$workingImage.'"
+																  onClick="showPic(this.id, '.$iWidth.', '.$iHeight.', \''.$workingImage.'\', 
+																				   '.$picInSeries.')">');
+																  
+																  $remainder = $picCount % 2;
+																  if ($remainder > 0 && $picCount != $picInSeries) {
+																	  echo ('&nbsp;&nbsp;&nbsp;&nbsp;');
+																  } elseif ($remainder > 0 && $picCount == $picInSeries) {
+																	  echo ('<br><br>');
+																  } elseif ($remainder == 0 && $picCount != $picInSeries) {
+																	  echo ('<br><br>');
+																  } elseif ($remainder == 0 && $picCount == $picInSeries) {
+																	  echo ('<br><br>');
+																  }  // ends if that checks for odd and even #s
+																
+
+															   }  elseif (file_exists($existPng)) {
+																   $workingImage = '/images/'.$row[name].'/'.$row[name].'-'.$picCount.'.png';
+														           $iDimensions = getimagesize("http://agamedesigner.info".$workingImage,					
+																				  $imageAttrib);
+																   $iWidth = $iDimensions[0];
+											                       $iHeight = $iDimensions[1];
+											  
+											  					   $newWidth = 290;
+											                       $newHeight = $iHeight / $iWidth * 290;
+																   
+															     echo ('<img class="stock" src="'.$workingImage.'" title="ImageSet, '.$row[name].'. 
+																  Picture #'.$picCount.' of '.$picInSeries.'" width="'.$newWidth.'" 
+																  height="'.$newHeight.'" id="'.$workingImage.'"
+																  onClick="showPic(this.id, '.$iWidth.', '.$iHeight.', \''.$workingImage.'\', 
+																				   '.$picInSeries.')">');
+																 
+																  $remainder = $picCount % 2;
+																  if ($remainder > 0 && $picCount != $picInSeries) {
+																	  echo ('&nbsp;&nbsp;&nbsp;&nbsp;');
+																  } elseif ($remainder > 0 && $picCount == $picInSeries) {
+																	  echo ('<br><br>');
+																  } elseif ($remainder == 0 && $picCount != $picInSeries) {
+																	  echo ('<br><br>');
+																  } elseif ($remainder == 0 && $picCount == $picInSeries) {
+																	  echo ('<br><br>');
+																  }  // ends if that checks for odd and even #s
+																  
+															   }  // ends if that checks image file extension
+														   } // ends For Loop
+																  
+															
+															$imageSetNum = $row[name];
+																 if (substr($imageSetNum,-2,1) == "-"){
+																	 $imageSetNum = substr($imageSetNum,-1,1);
+																 } elseif (substr($imageSetNum -3,1) == "-"){
+																	 $imageSetNum = substr($imageSetNum,-2,2);
+																 } elseif (substr($imageSetNum,-4,1) == "-"){
+																	 $imageSetNum = substr($imageSetNum,-3,3);
+																 } elseif (substr($imageSetNum,-5,1) == "-"){
+																	 $imageSetNum = substr($imageSetNum,-4,4);
+																 } elseif (substr($imageSetNum,-6,1) == "-"){
+																	 $imageSetNum = substr($imageSetNum,-5,5);
+																 } elseif (substr($imageSetNum,-7,1) == "-"){
+																	 $imageSetNum = substr($imageSetNum,-6,6);
+																 } //$imageSetNum is the variable that holds the imageSet's name's number
+															
+																  
+																  echo('<span class="light"><i><b>Comments:</b></i></span>&nbsp;&nbsp;');
+															if ($row[comment] != "") {
+															   echo ('<table border=0 cellspacing=6 cellpadding=0><tr><td align="right">
+																	 <a class="owner" href="mailto::gatene@agamedesigner.info">Gatene:</a> </span></td>
+																	 <td><span class="white">'.$row[comment].'</span></td></tr>');
+															}else{
+																echo ('<table border=0 cellspacing=0 cellpadding=0>'); }
+															
+															$getCommQuery = "SELECT user, comment FROM notes WHERE pic=$row[number]";
+															$commQuery = mysqli_query($database,$getCommQuery);
+															
+															if ($commQuery){
+																$commQueryRows = mysqli_num_rows($commQuery);
+															} else {
+																$commQueryRows = 0;
+															}
+															
+															if ($commQueryRows > 0){
+																$commRows = 1;
+																while ($commRow = mysqli_fetch_assoc($commQuery)){
+																	$userInfo = "SELECT user FROM users WHERE number = ".$commRow[user];
+																	$infoQuery = mysqli_query($database, $userInfo);
+																	$userFetch = mysqli_fetch_assoc($infoQuery);
+																	$userComm = $userFetch[user];
+																	if ($commRows == 1){
+																		$commRows = 2;
+																		echo('<tr><td align="right">
+																		   &nbsp;&nbsp;<span class="commentOwner2">'.$userComm.':</span></td>
+																		   <td>&nbsp;&nbsp;<span class="light">'.$commRow[comment].'</span></td>
+																		   </tr>');
+																	} else {
+																		$commRows = 1;
+																		echo('<tr class="shadow"><td align="right">
+																			&nbsp;&nbsp;<span class="commentOwner1">'.$userComm.':</span></td>
+																			<td>&nbsp;&nbsp;<span class="white">'.$commRow[comment].'</span></td>
+																			</tr>');
+																	}
+																}
+																echo('</table><br>');
+															} else {
+																echo ('<tr><td>&nbsp;&nbsp;<i>None</i></td></tr></table><br>');
+															}
+															
+															if ($commQuery){
+																mysqli_free_result($commQuery);
+															}
+											    
+															
+									
+									
+															if ($_SESSION[user]){			
+								$spanId='comm'.$imageSetNum;
+							echo('<img class="fav" src="/icons/notes_nobg.png" title="Click to Comment" align="center" onClick="comm(`'.$spanId.'`, '.$row[number].')">
+											&nbsp;&nbsp;<span id="'.$spanId.'"><a class="comment" title="Click to Comment" onClick="comm(`'.$spanId.'`,'.$row[number].')">Leave your own comments</a></span><br><br>');
+										// Creates Comments Spiel clickable and dynamic
+							} else {
+								
+								echo('<img src="/icons/notes_nobg.png" title="Log in / Register to Comment" align="center">	
+									 &nbsp;&nbsp;<span class="comment">Log in / Register to Comment"</span><br><br>');
+							}
+															
+															
+												 		
+											
+														if (isset($_SESSION[user]) && $_SESSION[user] != "") {	
+														//Finding out which FAVORITE emoticon to show
+														$favVar = "SELECT user FROM fav WHERE number=".$imageSetNum." AND user=$_SESSION[usernum]";
+														
+														$favQuery = mysqli_query($database,$favVar);
+														if ($favQuery){
+															$favNumRows = mysqli_num_rows($favQuery);
+															mysqli_free_result($favQuery);
+														} else {
+															$favNumRows = 0;
+														}
+													echo ('<div id="'.$imageSetNum.'">');
+														if ($favNumRows > 0 && $_SESSION[user]) {
+															echo('<img class="fav" src="/icons/drool_nobg.png" title = "You Like This ImageSet" onClick="favorite('.$imageSetNum.')" align="center">&nbsp;&nbsp;&nbsp;<span class="like">Click to Unlike</span></div>');
+														} else {
+															echo('<img class="fav" src="/icons/drool_bw_nobg.png" title = "Click to Like This ImageSet" onClick="favorite('.$imageSetNum.')" align="center">&nbsp;&nbsp;&nbsp;<span class="like">Click to Like</span></div>');
+														} 
+											} else {
+												echo ('<img src="/icons/drool_bw_nobg.png" title="Register to &quot;Like&quot; ImageSets" align="center"> &nbsp;&nbsp;<span class="comment">Log In / Register to &quot;Like&quot; Image Posts.</span>');
+											}
+											
+											//Starting Category List Under Each Photo
+											echo('<br><br>
+												  <table border=0 cellspacing=0 cellpadding=0>
+												  	<tr>
+														<td>
+															<span class="cat">Categories:&nbsp;</span>
+														</td>
+														<td>
+															<span class="like" onClick="jumpPage(1,10,\'normal\')">No Category,&nbsp;</span>');
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category / Toy,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category,&nbsp;</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category</span>'); }
+															if ($row[Category] == 1){ echo('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category</span>'); }
+															if ($row[Category] == 1){echo ('
+															<span class="like" onClick="jumpPage(1,10,\'Category\')">Category</span>');}
+														echo('</td>
+													</tr>
+												   </table>
+												 ');
+											//Ended Category List Under Each Photo
+											
+												echo('	
+													</td>
+													<td class="borderRight"></td>
+												</tr>
+												<tr>
+													<td class="borderBottomLeft"></td>
+													<td class="borderBottomCenter"></td>
+													<td class="borderBottomRight"></td>
+												</tr>
+											</table>
+											
+											<br>'); 
+											} // ends else startment saying image is a imageset.
+											if ($offset != false && $offset != $endOnPicCat){
+												$offset++;
+											} elseif ($offset == 0 && offset != $endOnPicCat){
+												$offset++;
+											} elseif ($offset != false && $offset == $endOnPicCat) {
+												break;
+											}
+										} // Ends While
+                                    ?>
+                                <!-- End Actual Border //-->
+                                
+                            </td>
+                            
+                            
+                            
+                            
+                            
+                        </tr>
+                        <tr>
+                        	<td colspan=2>
+                				<div class="menusBottom">
+                					<?PHP   
+												$prevPage = $page - 1;
+												$prev1 = $page - 1;
+												$prev2 = $page - 2;
+												$prev3 = $page - 3;
+												$nextPage = $page + 1;
+												$next1 = $page + 1;
+												$next2 = $page + 2;
+												$next3 = $page + 3;
+											    
+												if ($prev1 <= 0){
+													$prev1 = 0;
+													$prev2 = 0;
+													$prev3 = 0; }
+												if ($prev2 <= 0){
+													$prev2 = 0;
+													$prev3 = 0; }
+												if ($prev3 <= 0){
+													$prev3 = 0; }
+												if ($next1 > $possiblePages){
+													$next1 = 0;
+													$next2 = 0;
+													$next3 = 0; }
+												if ($next2 > $possiblePages){
+													$next2 = 0;
+													$next3 = 0; }
+												if ($next3 > $possiblePages){
+													$next3 = 0; }
+									
+											if ($cat == "normal"){
+												echo('&nbsp;<span class="lightdn">Showing Images <i>'.$endOnPic.'</i> to <i>'.$startOnPic.'</i>
+													  in no category.</span><br>');
+											} else {
+											 echo('&nbsp;<span class="lightdn">Showing Images in the &quot;'.$cat.'&quot; category.</span><br>');
+											}
+											
+											echo('
+												 &nbsp;&nbsp;&nbsp;&nbsp;
+									<span class="lightbdn">Jump to Page:</span>&nbsp;&nbsp;&nbsp;<span class="simplenounder" onClick="jumpPage(1, '.$perPage.',`'.$cat.'`)"
+									             title="Go to Page 1">&lt;&lt;</span>&nbsp;&nbsp;'); 
+											 if ($prev3 != 0) {
+											 echo ('<span class="simplenounder" title="Go to Page '.$prev3.'" onClick="jumpPage('.$prev3.', '.$perPage.',`'.$cat.'`)">
+											       '.$prev3.'</span>&nbsp;&nbsp;'); }
+											 if ($prev2 != 0) {
+											 echo ('<span class="simplenounder" title="Go to Page '.$prev2.'" onClick="jumpPage('.$prev2.', '.$perPage.',`'.$cat.'`)">
+											       '.$prev2.'</span>&nbsp;&nbsp;'); }
+											 if ($prev1 != 0) {
+											 echo ('<span class="simplenounder" title="Go to Page '.$prev1.'" onClick="jumpPage('.$prev1.', '.$perPage.',`'.$cat.'`)">
+											       '.$prev1.'</span>&nbsp;&nbsp;'); }
+											 echo ('<span class="lightbup">'.$page.'</span>&nbsp;&nbsp;');
+											 if ($next1 != 0) {
+											 echo ('<span class="simplenounder" title="Go to Page '.$next1.'" onClick="jumpPage('.$next1.', '.$perPage.',`'.$cat.'`)">
+											       '.$next1.'</span>&nbsp;&nbsp;'); }
+											 if ($next2 != 0) {
+											 echo ('<span class="simplenounder" title="Go to Page '.$next2.'" onClick="jumpPage('.$next2.', '.$perPage.',`'.$cat.'`)">
+											       '.$next2.'</span>&nbsp;&nbsp;'); }
+											 if ($next3 != 0) {
+											 echo ('<span class="simplenounder" title="Go to Page '.$next3.'" onClick="jumpPage('.$next3.', '.$perPage.',`'.$cat.'`)">
+											       '.$next3.'</span>&nbsp;&nbsp;'); }
+											 echo ('&nbsp;<span class="simplenounder" onClick="jumpPage('.$possiblePages.', '.$perPage.',`'.$cat.'`)"
+									             title="Go to Page '.$possiblePages.'">&gt;&gt;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+												 
+echo('											 <form action="" method="post">
+												 <span class="lightbdn">Images Per Page:&nbsp;&nbsp;</span>
+											<select name="myPerPage" id="perPage" onchange="userPerPage(`'.$cat.'`)">');
+														if ($perPage == 1){
+															echo('<option SELECTED value="1">1</option>'); 
+														} else {
+															echo('<option value="1">1</option>'); }
+														if ($perPage == 5){
+															echo('<option SELECTED value="5">5</option>'); 
+														} else {
+															echo('<option value="5">5</option>'); }
+														if ($perPage == 10){
+															echo('<option SELECTED value="10">10</option>'); 
+														} else {
+															echo('<option value="10">10</option>'); }
+														if ($perPage == 25){
+															echo('<option SELECTED value="25">25</option>'); 
+														} else {
+															echo('<option value="25">25</option>'); }
+														if ($perPage == 50){
+															echo('<option SELECTED value="50">50</option>'); 
+														} else {
+															echo('<option value="50">50</option>'); }
+														if ($perPage == 75){
+															echo('<option SELECTED value="75">75</option>'); 
+														} else {
+															echo('<option value="75">75</option>'); }
+														if ($perPage == 100){
+															echo('<option SELECTED value="100">100</option>'); 
+														} else {
+															echo('<option value="100">100</option>'); }
+										echo('</select>
+												 </form>');
+											 
+											 ?>
+                				</div>
+                            </td>
+                        </tr>
+                        <tr>
+                        	<td colspan=2>
+                        		<br><br>
+                                <div class="topsites">
+                                	<center>
+                					<table name = "Bottom Ads" border=0 cellspacing=1 cellpadding=0>
+    									<tr>
+ 											<td valign="bottom" align="right"><a href="Ad site" target="_new"><img src="Ad Image" alt="Ad Text">
+    								  		</a><br>
+ 	  								  		<a href="Ad URL" title="Ad title" target="_new"><img src="Ad Image"></a><br>
+                   								<a href="Ad URL"><img src="Ad Image" title="Ad Title"></a><br>
+											</td>
+    
+    <td valign = "bottom" align=left><a href="Ad URL" title="Ad Title" target="_new">
+      <img src="Ad Image" alt="Ad Text"></a>  <br>
+      <center><a href="Ad URL" title="Ad Title">
+<img src="Ad URL" alt="Ad Text" border="0" /></a></center>
+    </td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <td valign="top">
+    	<center>
+    		<span class="Heading">Heading</span><br><br>
+    		<a target="Link" href="Link"><img src="Link.png"></a><br><br>
+    		<span class="dark">E-mail gatene@agamedesigner.info to Add Your Site</span>
+    	</center>
+    </td>
+
+    </tr>
+    									</table>
+                                        <br><br><br><br>
+                                        <a style="text-decoration:none" 
+                                         href="Ad URL" target="_new">
+                                         <img class="stock" title="Ad Title"
+                                         src="Ad Image"></a></center>
+                                
+                				</div>
+                            </td>
+                        </tr>
+                        <tr>
+                        	<td colspan=2>
+                            	<br><br>
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- End Left Pane's P / V Entry Table //-->
+                </div>
+                
+                
+                 
+                
+                
+                <div class="rightPane">
+                <center>
+                <?php
+					switch ($cat){
+						case "anal":
+							echo ('<a style="text-decoration:none" href="Ad URL" target="_new">
+								   	<img class="stock" title="Ad Title" src="Ad Image">
+								   </a>');
+						break;
+						case "ass":
+					echo ('<a style="text-decoration:none" href="Ad URL" target="_new">
+							<img class="stock" title="Ad Title" src="Ad Image">
+								   </a>');
+						break;
+						case "bdsm":
+							echo ('<a style="text-decoration:none" href="http://enter.men.com/track/MTg4NTEuMS4xLjEuMC4wLjAuMC4w" target="_new">
+								   	<img class="stock" title="Click to enter Men.com &#10; (Opens in a new window)" src="/ads/men/bdsm.jpg">
+								   </a>');
+						break;
+						case "bigdick":
+			echo ('<a style="text-decoration:none" href="http://enter.bigdicksatschool.com/track/MTg4NTEuMS4yLjExLjAuMC4wLjAuMA" target="_new">
+				<img class="stock" title="Click to enter Men.com (big dicks at school) &#10; (Opens in a new window)" src="/ads/men/bigdick.jpg">
+								   </a>');
+						break;
+						case "complexion":
+							echo ('<a style="text-decoration:none" href="http://enter.men.com/track/MTg4NTEuMS4xLjEuMC4wLjAuMC4w" target="_new">
+								   	<img class="stock" title="Click to enter Men.com &#10; (Opens in a new window)" src="/ads/men/complexion.jpg">
+								   </a>');
+						break;
+						case "leather":
+							echo ('<a style="text-decoration:none" href="http://enter.men.com/track/MTg4NTEuMS4xLjEuMC4wLjAuMC4w" target="_new">
+								   	<img class="stock" title="Click to enter Men.com &#10; (Opens in a new window)" src="/ads/men/leather.jpg">
+								   </a>');
+						break;
+						case "muscle":
+							echo ('<a style="text-decoration:none" href="http://enter.men.com/track/MTg4NTEuMS4xLjEuMC4wLjAuMC4w" target="_new">
+								   	<img class="stock" title="Click to enter Men.com &#10; (Opens in a new window)" src="/ads/men/muscle.jpg">
+								   </a>');
+						break;
+						case "oral":
+					echo ('<a style="text-decoration:none" href="http://enter.jizzorgy.com/track/MTg4NTEuMS45LjcxLjAuMC4wLjAuMA" target="_new">
+					  	   <img class="stock" title="Click to enter Men.com (jizz orgy) &#10; (Opens in a new window)" src="/ads/men/oral.jpg">
+								   </a>');
+						break;
+						case "otter":
+							echo ('<a style="text-decoration:none" href="http://enter.men.com/track/MTg4NTEuMS4xLjEuMC4wLjAuMC4w" target="_new">
+								   	<img class="stock" title="Click to enter Men.com &#10; (Opens in a new window)" src="/ads/men/otter.jpg">
+								   </a>');
+						break;
+						case "smooth":
+							echo ('<a style="text-decoration:none" href="http://enter.men.com/track/MTg4NTEuMS4xLjEuMC4wLjAuMC4w" target="_new">
+								   	<img class="stock" title="Click to enter Men.com &#10; (Opens in a new window)" src="/ads/men/smooth.jpg">
+								   </a>');
+						break;
+						case "tattoo":
+							echo ('<a style="text-decoration:none" href="http://enter.men.com/track/MTg4NTEuMS4xLjEuMC4wLjAuMC4w" target="_new">
+								   	<img class="stock" title="Click to enter Men.com &#10; (Opens in a new window)" src="/ads/men/tattoo.jpg">
+								   </a>');
+						break;
+						case "uncut":
+					echo ('<a style="text-decoration:none" href="http://enter.menofuk.com/track/MTg4NTEuMS4xMS4xODEuMC4wLjAuMC4w" target="_new">
+						   <img class="stock" title="Click to enter Men.com (men of UK) &#10; (Opens in a new window)" src="/ads/men/uncut.jpg">
+								   </a>');
+						break;
+						default:
+							echo ('<a style="text-decoration:none" href="http://enter.men.com/track/MTg4NTEuMS4xLjEuMC4wLjAuMC4w" target="_new">
+								   	<img class="stock" title="Click to enter Men.com &#10; (Opens in a new window)" src="/ads/men/normal.jpg">
+								   </a>');
+						break;
+					}
+					
+					echo ('<br><br><br><br><br><br>');
+					
+					switch ($cat){
+						case "anal":
+						  echo ('<a style="text-decoration:none" 
+								 href="http://join.worldofmen.com/track/MzA2MDAwMDY0NS4yLjEzLjEzLjAuMC4wLjAuMA" target="_new">
+								 <img class="stock" title="Click to enter worldofmen.com&#10;(Opens in a new window)"
+								 src="ads/worldofmen/anal.jpg"></a>');
+						break;
+						case "ass":
+						  echo ('<a style="text-decoration:none" 
+								 href="http://join.worldofmen.com/track/MzA2MDAwMDY0NS4yLjEzLjEzLjAuMC4wLjAuMA" target="_new">
+								 <img class="stock" title="Click to enter worldofmen.com&#10;(Opens in a new window)"
+								 src="ads/worldofmen/ass.jpg"></a>');
+						break;
+						case "complexion":
+						  echo ('<a style="text-decoration:none" 
+								 href="http://join.worldofmen.com/track/MzA2MDAwMDY0NS4yLjEzLjEzLjAuMC4wLjAuMA" target="_new">
+								 <img class="stock" title="Click to enter worldofmen.com&#10;(Opens in a new window)"
+								 src="ads/worldofmen/complexion.jpg"></a>');
+						break;
+						case "oral":
+						  echo ('<a style="text-decoration:none" 
+								 href="http://join.worldofmen.com/track/MzA2MDAwMDY0NS4yLjEzLjEzLjAuMC4wLjAuMA" target="_new">
+								 <img class="stock" title="Click to enter worldofmen.com&#10;(Opens in a new window)"
+								 src="ads/worldofmen/oral.jpg"></a>');
+						break;
+						case "tattoo":
+						  echo ('<a style="text-decoration:none" 
+								 href="http://join.worldofmen.com/track/MzA2MDAwMDY0NS4yLjEzLjEzLjAuMC4wLjAuMA" target="_new">
+								 <img class="stock" title="Click to enter worldofmen.com&#10;(Opens in a new window)"
+								 src="ads/worldofmen/tattoo.jpg"></a>');
+						break;
+						case "underwear":
+						  echo ('<a style="text-decoration:none" 
+								 href="http://join.worldofmen.com/track/MzA2MDAwMDY0NS4yLjEzLjEzLjAuMC4wLjAuMA" target="_new">
+								 <img class="stock" title="Click to enter worldofmen.com&#10;(Opens in a new window)"
+								 src="ads/worldofmen/underwear.jpg"></a>');
+						break;
+						default:
+						  echo ('<a style="text-decoration:none" 
+								 href="http://join.worldofmen.com/track/MzA2MDAwMDY0NS4yLjEzLjEzLjAuMC4wLjAuMA" target="_new">
+								 <img class="stock" title="Click to enter worldofmen.com&#10;(Opens in a new window)"
+								 src="ads/worldofmen/normal.jpg"></a>');
+						break;
+					}
+					
+					echo ('<br><br><br><br><br><br>');
+					switch ($cat) {
+						case "anal":
+							echo ('<a style="text-decoration:none" href="http://join.alphamales.com/track/MzA2MDAwMDY0NS4yLjQ1LjE0Ni4wLjAuMC4wLjA"
+								   target="new"><img class="stock" title="Click to enter alphamales.com &#10;(Opens in a new window)" 
+								   src="/ads/alphamales/anal.jpg"></a>');
+						break;
+						case "ass":
+							echo ('<a style="text-decoration:none" href="http://join.alphamales.com/track/MzA2MDAwMDY0NS4yLjQ1LjE0Ni4wLjAuMC4wLjA"
+								   target="new"><img class="stock" title="Click to enter alphamales.com &#10;(Opens in a new window)" 
+								   src="/ads/alphamales/ass.jpg"></a>');
+						break;					
+						case "bigdick":
+							echo ('<a style="text-decoration:none" href="http://join.alphamales.com/track/MzA2MDAwMDY0NS4yLjQ1LjE0Ni4wLjAuMC4wLjA"
+								   target="new"><img class="stock" title="Click to enter alphamales.com &#10;(Opens in a new window)" 
+								   src="/ads/alphamales/bigdick.jpg"></a>');
+						break;					
+						case "complexion":
+							echo ('<a style="text-decoration:none" href="http://join.alphamales.com/track/MzA2MDAwMDY0NS4yLjQ1LjE0Ni4wLjAuMC4wLjA"
+								   target="new"><img class="stock" title="Click to enter alphamales.com &#10;(Opens in a new window)" 
+								   src="/ads/alphamales/complexion.jpg"></a>');
+						break;					
+						case "tattoo":
+							echo ('<a style="text-decoration:none" href="http://join.alphamales.com/track/MzA2MDAwMDY0NS4yLjQ1LjE0Ni4wLjAuMC4wLjA"
+								   target="new"><img class="stock" title="Click to enter alphamales.com &#10;(Opens in a new window)" 
+								   src="/ads/alphamales/tattoo.jpg"></a>');
+						break;											
+						default:
+							echo ('<a style="text-decoration:none" href="http://join.alphamales.com/track/MzA2MDAwMDY0NS4yLjQ1LjE0Ni4wLjAuMC4wLjA"
+								   target="new"><img class="stock" title="Click to enter alphamales.com &#10;(Opens in a new window)" 
+								   src="/ads/alphamales/hairy.gif"></a>');
+						break;
+					}
+					
+					echo ('<br><br><br><br><br><br>');
+					switch ($cat) {
+						case "anal":
+					echo ('<a style="text-decoration:none" href="http://signup.badpuppy.com/track/MTAwMDI1LjEuMi4yLjUuMC4wLjAuMA" target="_new">
+					       <img class="stock" title="Click to enter badpuppy.com &#10; (Opens in a new window)" src="/ads/badpuppy/anal.jpg">
+								   </a>');
+						break;
+						case "finger":
+					echo ('<a style="text-decoration:none" href="http://signup.badpuppy.com/track/MTAwMDI1LjEuMi4yLjUuMC4wLjAuMA" target="_new">
+					       <img class="stock" title="Click to enter badpuppy.com &#10; (Opens in a new window)" src="/ads/badpuppy/finger.gif">
+								   </a>');
+						break;
+						case "muscle":
+					echo ('<a style="text-decoration:none" href="http://signup.badpuppy.com/track/MTAwMDI1LjEuMi4yLjUuMC4wLjAuMA" target="_new">
+					       <img class="stock" title="Click to enter badpuppy.com &#10; (Opens in a new window)" src="/ads/badpuppy/muscle.jpg">
+								   </a>');
+						break;
+						case "oral":
+					echo ('<a style="text-decoration:none" href="http://signup.badpuppy.com/track/MTAwMDI1LjEuMi4yLjUuMC4wLjAuMA" target="_new">
+					       <img class="stock" title="Click to enter badpuppy.com &#10; (Opens in a new window)" src="/ads/badpuppy/oral.jpg">
+								   </a>');
+						break;
+						case "smooth":
+					echo ('<a style="text-decoration:none" href="http://signup.badpuppy.com/track/MTAwMDI1LjEuMi4yLjUuMC4wLjAuMA" target="_new">
+					       <img class="stock" title="Click to enter badpuppy.com &#10; (Opens in a new window)" src="/ads/badpuppy/smooth.jpg">
+								   </a>');
+						break;
+						case "tattoo":
+					echo ('<a style="text-decoration:none" href="http://signup.badpuppy.com/track/MTAwMDI1LjEuMi4yLjUuMC4wLjAuMA" target="_new">
+					       <img class="stock" title="Click to enter badpuppy.com &#10; (Opens in a new window)" src="/ads/badpuppy/tattoo.jpg">
+								   </a>');
+						break;
+						case "uncut":
+					echo ('<a style="text-decoration:none" href="http://signup.badpuppy.com/track/MTAwMDI1LjEuMi4yLjUuMC4wLjAuMA" target="_new">
+					       <img class="stock" title="Click to enter badpuppy.com &#10; (Opens in a new window)" src="/ads/badpuppy/uncut.jpg">
+								   </a>');
+						break;
+						case "underwear":
+					echo ('<a style="text-decoration:none" href="http://signup.badpuppy.com/track/MTAwMDI1LjEuMi4yLjUuMC4wLjAuMA" target="_new">
+					       <img class="stock" title="Click to enter badpuppy.com &#10; (Opens in a new window)" src="/ads/badpuppy/underwear.jpg">
+								   </a>');
+						break;
+						default:
+					echo ('<a style="text-decoration:none" href="http://signup.badpuppy.com/track/MTAwMDI1LjEuMi4yLjUuMC4wLjAuMA" target="_new">
+					       <img class="stock" title="Click to enter badpuppy.com &#10; (Opens in a new window)" src="/ads/badpuppy/normal.jpg">
+								   </a>');
+						break;
+							
+					}
+					
+					echo ('<br><br><br><br><br><br>');
+					
+					switch ($cat) {
+						case "anal":
+					echo ('<a style="text-decoration:none"
+						  	href="http://www.buddylead.com/menover30/go.php?pr=9&su=1&si=67&ad=248034&pa=index&ar=&campaign=64945&buffer="
+							target="_new">
+					       <img class="stock" title="Click to enter menover30.com &#10; (Opens in a new window)" src="/ads/over30/anal.jpg">
+								   </a>');
+						break;
+						case "ass":
+					echo ('<a style="text-decoration:none"
+						  	href="http://www.buddylead.com/menover30/go.php?pr=9&su=1&si=67&ad=248034&pa=index&ar=&campaign=64945&buffer="
+							target="_new">
+					       <img class="stock" title="Click to enter menover30.com &#10; (Opens in a new window)" src="/ads/over30/ass.jpg">
+								   </a>');
+						break;
+						case "dildo":
+					echo ('<a style="text-decoration:none"
+						  	href="http://www.buddylead.com/menover30/go.php?pr=9&su=1&si=67&ad=248034&pa=index&ar=&campaign=64945&buffer="
+							target="_new">
+					       <img class="stock" title="Click to enter menover30.com &#10; (Opens in a new window)" src="/ads/over30/dildo.jpg">
+								   </a>');
+						break;
+						case "older":
+					echo ('<a style="text-decoration:none"
+						  	href="http://www.buddylead.com/menover30/go.php?pr=9&su=1&si=67&ad=248034&pa=index&ar=&campaign=64945&buffer="
+							target="_new">
+					       <img class="stock" title="Click to enter menover30.com &#10; (Opens in a new window)" src="/ads/over30/older.jpg">
+								   </a>');
+						break;
+						case "oral":
+					echo ('<a style="text-decoration:none"
+						  	href="http://www.buddylead.com/menover30/go.php?pr=9&su=1&si=67&ad=248034&pa=index&ar=&campaign=64945&buffer="
+							target="_new">
+					       <img class="stock" title="Click to enter menover30.com &#10; (Opens in a new window)" src="/ads/over30/oral.jpg">
+								   </a>');
+						break;
+						case "tattoo":
+					echo ('<a style="text-decoration:none"
+						  	href="http://www.buddylead.com/menover30/go.php?pr=9&su=1&si=67&ad=248034&pa=index&ar=&campaign=64945&buffer="
+							target="_new">
+					       <img class="stock" title="Click to enter menover30.com &#10; (Opens in a new window)" src="/ads/over30/tattoo.jpg">
+								   </a>');
+						break;
+						default:
+					echo ('<a style="text-decoration:none"
+						  	href="http://www.buddylead.com/menover30/go.php?pr=9&su=1&si=67&ad=248034&pa=index&ar=&campaign=64945&buffer="
+							target="_new">
+					       <img class="stock" title="Click to enter menover30.com &#10; (Opens in a new window)" src="/ads/over30/normal.jpg">
+								   </a>');
+						break;
+						
+					}
+					
+					echo ('<br><br><br><br><br><br>');
+					
+					switch ($cat) {
+						case "anal":
+							echo ('<a style="text-decoration:none" 
+								   href="http://join.bareadventures.com/track/MzA2MDAwMDY0NS4yLjEwLjEwLjAuMC4wLjAuMA" target="_new">
+								   <img class="stock" title="Click to enter bareadventures.com&#10;(Opens in a new window)"
+								   src="ads/bare/anal.jpg"></a>');
+						break;
+						case "smooth":
+							echo ('<a style="text-decoration:none" 
+								   href="http://join.bareadventures.com/track/MzA2MDAwMDY0NS4yLjEwLjEwLjAuMC4wLjAuMA" target="_new">
+								   <img class="stock" title="Click to enter bareadventures.com&#10;(Opens in a new window)"
+								   src="ads/bare/normal.jpg"></a>');
+						break;
+						default:
+							echo ('<a style="text-decoration:none" 
+								   href="http://join.bareadventures.com/track/MzA2MDAwMDY0NS4yLjEwLjEwLjAuMC4wLjAuMA" target="_new">
+								   <img class="stock" title="Click to enter bareadventures.com&#10;(Opens in a new window)"
+								   src="ads/bare/oral.jpg"></a>');
+						break;
+					}
+					
+					echo ('<br><br><br><br><br><br>');
+					
+					switch ($cat){
+						case "anal":
+							echo ('<a style="text-decoration:none" href="http://join.bearfilms.com/track/MzA2MDAwMDY0NS4yLjQxLjEzMi4wLjAuMC4wLjA"
+								   target="_new"><img class="stock" title="Click to enter bearfilms.com&#10;(Opens in a new window)"
+								   src="/ads/bearfilms/anal.jpg"></a>');
+						break;
+						case "big":
+							echo ('<a style="text-decoration:none" href="http://join.bearfilms.com/track/MzA2MDAwMDY0NS4yLjQxLjEzMi4wLjAuMC4wLjA"
+								   target="_new"><img class="stock" title="Click to enter bearfilms.com&#10;(Opens in a new window)"
+								   src="/ads/bearfilms/big.jpg"></a>');
+						break;
+						case "cub":
+							echo ('<a style="text-decoration:none" href="http://join.bearfilms.com/track/MzA2MDAwMDY0NS4yLjQxLjEzMi4wLjAuMC4wLjA"
+								   target="_new"><img class="stock" title="Click to enter bearfilms.com&#10;(Opens in a new window)"
+								   src="/ads/bearfilms/cub.jpg"></a>');
+						break;
+						case "older":
+							echo ('<a style="text-decoration:none" href="http://join.bearfilms.com/track/MzA2MDAwMDY0NS4yLjQxLjEzMi4wLjAuMC4wLjA"
+								   target="_new"><img class="stock" title="Click to enter bearfilms.com&#10;(Opens in a new window)"
+								   src="/ads/bearfilms/older.jpg"></a>');
+						break;
+						case "oral":
+							echo ('<a style="text-decoration:none" href="http://join.bearfilms.com/track/MzA2MDAwMDY0NS4yLjQxLjEzMi4wLjAuMC4wLjA"
+								   target="_new"><img class="stock" title="Click to enter bearfilms.com&#10;(Opens in a new window)"
+								   src="/ads/bearfilms/oral.jpg"></a>');
+						break;
+						case "tattoo":
+							echo ('<a style="text-decoration:none" href="http://join.bearfilms.com/track/MzA2MDAwMDY0NS4yLjQxLjEzMi4wLjAuMC4wLjA"
+								   target="_new"><img class="stock" title="Click to enter bearfilms.com&#10;(Opens in a new window)"
+								   src="/ads/bearfilms/tattoo2.jpg"></a>');
+						break;
+						case "uncut":
+							echo ('<a style="text-decoration:none" href="http://join.bearfilms.com/track/MzA2MDAwMDY0NS4yLjQxLjEzMi4wLjAuMC4wLjA"
+								   target="_new"><img class="stock" title="Click to enter bearfilms.com&#10;(Opens in a new window)"
+								   src="/ads/bearfilms/uncut.jpg"></a>');
+						break;
+						case "complexion":
+							echo ('<a style="text-decoration:none" href="http://join.bearfilms.com/track/MzA2MDAwMDY0NS4yLjQxLjEzMi4wLjAuMC4wLjA"
+								   target="_new"><img class="stock" title="Click to enter bearfilms.com&#10;(Opens in a new window)"
+								   src="/ads/bearfilms/tattoo.jpg"></a>');
+						break;
+						default:
+							echo ('<a style="text-decoration:none" href="http://join.bearfilms.com/track/MzA2MDAwMDY0NS4yLjQxLjEzMi4wLjAuMC4wLjA"
+								   target="_new"><img class="stock" title="Click to enter bearfilms.com&#10;(Opens in a new window)"
+								   src="/ads/bearfilms/normal.jpg"></a>');
+						break;
+					}
+				?>
+                </center>
+                </div>
+                
+                
+               
+                
+            </div>    
+             
+    	<?php
+			mysqli_close($database);
+			SESSION_WRITE_CLOSE();
+		?>
+    </body>
+
+</html>
